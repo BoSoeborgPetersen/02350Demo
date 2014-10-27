@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace _02350Demo
+namespace _02350Demo.View
 {
     /// <summary>
     /// Interaction logic for App.xaml

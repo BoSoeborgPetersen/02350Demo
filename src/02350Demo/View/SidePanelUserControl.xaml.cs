@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace _02350Demo
+namespace _02350Demo.View
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for SidePanelUserControl.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class SidePanelUserControl : UserControl
     {
-        public MainWindow()
+        public SidePanelUserControl()
         {
             InitializeComponent();
         }

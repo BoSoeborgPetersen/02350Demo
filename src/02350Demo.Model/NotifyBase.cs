@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace _02350Demo.Model
 {
-    // This is an abstract base class that is used to define INotifyPropertyChanged functionality used by all model classes, so they do not have to.
+    // This is an abstract base class that is used to define INotifyPropertyChanged functionality used by all Model classes, so they do not have to.
     // The purpose of the INotifyPropertyChanged interface is to inform the View (GUI) that a property of a bound object has changed, so it can update the corresponding graphical representation.
     public abstract class NotifyBase : INotifyPropertyChanged
     {

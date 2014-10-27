@@ -16,31 +16,31 @@ namespace _02350Demo.Model
         //  so the graphical representation can be updated.
         private Shape from;
         public Shape From { get { return from; } set { from = value; NotifyPropertyChanged("From"); } }
-        // This corresponds to the following in Java:
+        // This corresponds to the following in Java (can also be done like this in .NET):
 
         // private Shape from;
         // 
-        // public Shape From(){
+        // public Shape getFrom(){
         //   return from;
         // }
         //
-        // public void From(Shape value){
+        // public void setFrom(Shape value){
         //   from = value;
         //   NotifyPropertyChanged("From");
         // }
 
         private Shape to;
         public Shape To { get { return to; } set { to = value; NotifyPropertyChanged("To"); } }
-        // This corresponds to the following in Java:
+        // This corresponds to the following in Java (can also be done like this in .NET):
 
-        // private Shape To;
+        // private Shape to;
         // 
-        // public Shape To(){
-        //   return To;
+        // public Shape getTo(){
+        //   return to;
         // }
         //
-        // public void To(Shape value){
-        //   To = value;
+        // public void setTo(Shape value){
+        //   to = value;
         //   NotifyPropertyChanged("To");
         // }
     }
