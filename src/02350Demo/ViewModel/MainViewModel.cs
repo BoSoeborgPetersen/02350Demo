@@ -1,7 +1,7 @@
 ﻿using _02350Demo.Command;
 using _02350Demo.Model;
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.CommandWpf;
 using System;
 using System.Collections;
 using System.Collections.Generic;
