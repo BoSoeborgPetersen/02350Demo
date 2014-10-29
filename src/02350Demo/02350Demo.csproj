@@ -82,7 +82,6 @@
     <Compile Include="Command\RemoveShapesCommand.cs" />
     <Compile Include="Command\UndoRedoController.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\LineUserControl.xaml.cs">
       <DependentUpon>LineUserControl.xaml</DependentUpon>
     </Compile>
