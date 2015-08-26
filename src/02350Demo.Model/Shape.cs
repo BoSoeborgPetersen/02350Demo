@@ -22,7 +22,7 @@ namespace _02350Demo.Model
         // This is called Auto-Implemented Properties (http://msdn.microsoft.com/en-us/library/bb384054.aspx).
         public int Number { get; private set; }
 
-        private int x;
+        private int x = 200;
         public int X { get { return x; } set { x = value; NotifyPropertyChanged("X"); NotifyPropertyChanged("CanvasCenterX"); } }
         // This corresponds to the following in Java (can also be done like this in .NET):
 
@@ -38,7 +38,7 @@ namespace _02350Demo.Model
         //   NotifyPropertyChanged("CanvasCenterX");
         // }
 
-        private int y;
+        private int y = 200;
         public int Y { get { return y; } set { y = value; NotifyPropertyChanged("Y"); NotifyPropertyChanged("CanvasCenterY"); } }
         // This corresponds to the following in Java (can also be done like this in .NET):
 
@@ -54,7 +54,7 @@ namespace _02350Demo.Model
         //   NotifyPropertyChanged("CanvasCenterY");
         // }
 
-        private int width;
+        private int width = 100;
         public int Width { get { return width; } set { width = value; NotifyPropertyChanged("Width"); NotifyPropertyChanged("CanvasCenterX"); NotifyPropertyChanged("CenterX"); } }
         // This corresponds to the following in Java (can also be done like this in .NET):
 
@@ -71,7 +71,7 @@ namespace _02350Demo.Model
         //   NotifyPropertyChanged("CenterX");
         // }
 
-        private int height;
+        private int height = 100;
         public int Height { get { return height; } set { height = value; NotifyPropertyChanged("Height"); NotifyPropertyChanged("CanvasCenterY"); NotifyPropertyChanged("CenterY"); } }
         // This corresponds to the following in Java (can also be done like this in .NET):
 
@@ -137,14 +137,6 @@ namespace _02350Demo.Model
         {
             // This just means that the integer field called counter is incremented before its value is used to set the Number integer property.
             Number = ++counter;
-            X = Y = 200;
-            // The "X = Y = value" syntax corresponds to the following:
-            // X = 200;
-            // Y = 200;
-            Width = Height = 100;
-            // The "Width = Height = value" syntax corresponds to the following:
-            // Width = 200;
-            // Height = 200;
         }
 
         // By overwriting the ToString() method, the default representation of the class is changed from the full namespace (Java: package) name, 
