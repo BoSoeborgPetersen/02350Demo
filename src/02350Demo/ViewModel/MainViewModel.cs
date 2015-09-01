@@ -106,53 +106,53 @@ namespace _02350Demo.ViewModel
         }
 
         // Adds a Shape with an AddShapeCommand.
-        public void AddShape()
+        private void AddShape()
         {
             undoRedoController.AddAndExecute(new AddShapeCommand(Shapes, new Shape()));
         }
 
         // Checks if the chosen Shapes can be removed, which they can if exactly 1 is chosen.
-        public bool CanRemoveShape(IList _shapes)
+        private bool CanRemoveShape(IList _shapes)
         {
             return _shapes.Count == 1;
         }
 
         // Removes the chosen Shapes with a RemoveShapesCommand.
-        public void RemoveShape(IList _shapes)
+        private void RemoveShape(IList _shapes)
         {
             undoRedoController.AddAndExecute(new RemoveShapesCommand(Shapes, Lines, _shapes.Cast<Shape>().ToList()));
         }
 
         // Starts the procedure to remove a Line, by changing the mode to 'isAddingLine', 
         //  and making the shapes transparent.
-        public void AddLine()
+        private void AddLine()
         {
             isAddingLine = true;
             RaisePropertyChanged("ModeOpacity");
         }
 
         // Checks if the chosen Lines can be removed, which they can if at least one is chosen.
-        public bool CanRemoveLines(IList _edges)
+        private bool CanRemoveLines(IList _edges)
         {
             return _edges.Count >= 1;
         }
-        
+
         // Removes the chosen Lines with a RemoveLinesCommand.
-        public void RemoveLines(IList _lines)
+        private void RemoveLines(IList _lines)
         {
             undoRedoController.AddAndExecute(new RemoveLinesCommand(Lines, _lines.Cast<Line>().ToList()));
         }
-        
+
         // There are two reasons for doing a 'MouseDown' on a Shape, to move it or to draw a line from it.
         // It the state is not 'isAddingEdge', the mouse is captured, to move the Shape.
         // The reason for the capture is to receive mouse move events, even when the mouse is outside the application window.
-        public void MouseDownShape(MouseButtonEventArgs e)
+        private void MouseDownShape(MouseButtonEventArgs e)
         {
             if (!isAddingLine) e.MouseDevice.Target.CaptureMouse();
         }
-        
+
         // This is only used for moving a Shape, and only if the mouse is already captured.
-        public void MouseMoveShape(MouseEventArgs e)
+        private void MouseMoveShape(MouseEventArgs e)
         {
             // Checks that the mouse is captured and that a line is not being drawn.
             if (Mouse.Captured != null && !isAddingLine)
@@ -180,7 +180,7 @@ namespace _02350Demo.ViewModel
         // There are two reasons for doing a 'MouseUp'.
         // Either a Line is being drawn, and the second Shape has just been chosen.
         // Or a Shape is being moved and the move is now done.
-        public void MouseUpShape(MouseButtonEventArgs e)
+        private void MouseUpShape(MouseButtonEventArgs e)
         {
             // Used for adding a Line.
             if (isAddingLine)
