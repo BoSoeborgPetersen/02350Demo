@@ -10,91 +10,92 @@ namespace _02350Demo.Model
     // The Shape class descripes a shape with a position (X and Y), and a size (Width and Height).
     public class Shape : NotifyBase
     {
-        // Properties.
         // For a description of the Getter/Setter Property syntax ("{ get { ... } set { ... } }") see the Line class.
         // The static integer counter field is used to set the integer Number property to a unique number for each Shape object.
         private static int counter = 0;
 
         // The Number integer property holds a unique integer for each Shape object to identify them in the View (GUI) layer.
-        // The "{ get; set; }" syntax describes that a private field 
-        //  and default getter setter methods should be generated 
-        //  (the setter will be private because of the "private set;" part).
-        // This is called Auto-Implemented Properties (http://msdn.microsoft.com/en-us/library/bb384054.aspx).
-        public int Number { get; private set; }
+        // The "{ get; }" syntax describes that a private field 
+        //  and default getter method should be generated.
+        public int Number { get; }
 
         private int x = 200;
-        // TODO: Explain why no string is given.
-        // TODO: Explain why lambda is given.
-        public int X { get { return x; } set { x = value; NotifyPropertyChanged(); NotifyPropertyChanged(() => CanvasCenterX); } }
-        // This corresponds to the following in Java (can also be done like this in .NET):
-
-        // private Shape x;
+        // The reason no string is given to the 'NotifyPropertyChanged' method is because, 
+        //  it uses the compiler to get the name of the calling property, 
+        //  which in this case is the name of the property that has changed.
+        // A lambda expression can be given, because the 'NotifyPropertyChanged' method can get the property name from it.
+        // Java:
+        //  private Shape x;
         // 
-        // public Shape getX(){
-        //   return x;
-        // }
+        //  public Shape getX(){
+        //    return x;
+        //  }
         //
-        // public void setX(Shape value){
-        //   x = value;
-        //   NotifyPropertyChanged("X");
-        //   NotifyPropertyChanged("CanvasCenterX");
-        // }
+        //  public void setX(Shape value){
+        //    x = value;
+        //    NotifyPropertyChanged();
+        //    NotifyPropertyChanged("CanvasCenterX");
+        //  }
+        public int X { get { return x; } set { x = value; NotifyPropertyChanged(); NotifyPropertyChanged(() => CanvasCenterX); } }
 
         private int y = 200;
-        // TODO: Explain why no string is given.
-        // TODO: Explain why lambda is given.
-        public int Y { get { return y; } set { y = value; NotifyPropertyChanged(); NotifyPropertyChanged(() => CanvasCenterY); } }
-        // This corresponds to the following in Java (can also be done like this in .NET):
-
-        // private Shape y;
+        // The reason no string is given to the 'NotifyPropertyChanged' method is because, 
+        //  it uses the compiler to get the name of the calling property, 
+        //  which in this case is the name of the property that has changed.
+        // A lambda expression can be given, because the 'NotifyPropertyChanged' method can get the property name from it.
+        // Java:
+        //  private Shape y;
         // 
-        // public Shape getY(){
-        //   return y;
-        // }
+        //  public Shape getY(){
+        //    return y;
+        //  }
         //
-        // public void setY(Shape value){
-        //   y = value;
-        //   NotifyPropertyChanged("Y");
-        //   NotifyPropertyChanged("CanvasCenterY");
-        // }
+        //  public void setY(Shape value){
+        //    y = value;
+        //    NotifyPropertyChanged();
+        //    NotifyPropertyChanged("CanvasCenterY");
+        //  }
+        public int Y { get { return y; } set { y = value; NotifyPropertyChanged(); NotifyPropertyChanged(() => CanvasCenterY); } }
 
         private int width = 100;
-        // TODO: Explain why no string is given.
-        // TODO: Explain why lambda is given.
-        public int Width { get { return width; } set { width = value; NotifyPropertyChanged(); NotifyPropertyChanged(() => CanvasCenterX); NotifyPropertyChanged(() => CenterX); } }
-        // This corresponds to the following in Java (can also be done like this in .NET):
-
-        // private Shape width;
+        // The reason no string is given to the 'NotifyPropertyChanged' method is because, 
+        //  it uses the compiler to get the name of the calling property, 
+        //  which in this case is the name of the property that has changed.
+        // A lambda expression can be given, because the 'NotifyPropertyChanged' method can get the property name from it.
+        // Java:
+        //  private Shape width;
         // 
-        // public Shape getWidth(){
-        //   return width;
-        // }
+        //  public Shape getWidth(){
+        //    return width;
+        //  }
         //
-        // public void setWidth(Shape value){
-        //   width = value;
-        //   NotifyPropertyChanged("Width");
-        //   NotifyPropertyChanged("CanvasCenterX");
-        //   NotifyPropertyChanged("CenterX");
-        // }
+        //  public void setWidth(Shape value){
+        //    width = value;
+        //    NotifyPropertyChanged();
+        //    NotifyPropertyChanged("CanvasCenterX");
+        //    NotifyPropertyChanged("CenterX");
+        //  }
+        public int Width { get { return width; } set { width = value; NotifyPropertyChanged(); NotifyPropertyChanged(() => CanvasCenterX); NotifyPropertyChanged(() => CenterX); } }
 
         private int height = 100;
-        // TODO: Explain why no string is given.
-        // TODO: Explain why lambda is given.
-        public int Height { get { return height; } set { height = value; NotifyPropertyChanged(); NotifyPropertyChanged(() => CanvasCenterY); NotifyPropertyChanged(() => CenterY); } }
-        // This corresponds to the following in Java (can also be done like this in .NET):
-
-        // private Shape height;
+        // The reason no string is given to the 'NotifyPropertyChanged' method is because, 
+        //  it uses the compiler to get the name of the calling property, 
+        //  which in this case is the name of the property that has changed.
+        // A lambda expression can be given, because the 'NotifyPropertyChanged' method can get the property name from it.
+        // Java:
+        //  private Shape height;
         // 
-        // public Shape getHeight(){
-        //   return height;
-        // }
+        //  public Shape getHeight(){
+        //    return height;
+        //  }
         //
-        // public void setHeight(Shape value){
-        //   height = value;
-        //   NotifyPropertyChanged("Height");
-        //   NotifyPropertyChanged("CanvasCenterY");
-        //   NotifyPropertyChanged("CenterY");
-        // }
+        //  public void setHeight(Shape value){
+        //    height = value;
+        //    NotifyPropertyChanged();
+        //    NotifyPropertyChanged("CanvasCenterY");
+        //    NotifyPropertyChanged("CenterY");
+        //  }
+        public int Height { get { return height; } set { height = value; NotifyPropertyChanged(); NotifyPropertyChanged(() => CanvasCenterY); NotifyPropertyChanged(() => CenterY); } }
 
         // Derived properties.
         // Corresponds to making a Getter method in Java (for instance 'public int GetCenterX()'), 
@@ -106,29 +107,29 @@ namespace _02350Demo.Model
         //        relative to the upper left corner of the Shape. This is an example of a breaking change, 
         //        that is changed during the lifetime of an application, because the requirements change.
 
-        // TODO: Explain why lambda is given.
+        // A lambda expression can be given, because the 'NotifyPropertyChanged' method can get the property name from it.
         public int CanvasCenterX { get { return X + Width / 2; } set { X = value - Width / 2; NotifyPropertyChanged(() => X); } }
 
-        // TODO: Explain why lambda is given.
+        // A lambda expression can be given, because the 'NotifyPropertyChanged' method can get the property name from it.
         public int CanvasCenterY { get { return Y + Height / 2; } set { Y = value - Height / 2; NotifyPropertyChanged(() => Y); } }
+
         // The CenterX and CenterY properties are used by the Shape animation to define the point of rotation.
         // NOTE: These derived properties are diffent from the Shape properties with the same names, 
         //        from the 02350SuperSimpleDemo, see above for an explanation.
+        // This method uses an expression-bodied member (http://www.informit.com/articles/article.aspx?p=2414582) to simplify a method that only returns a value;
+        // Java:
+        //  public int getCenterX(){
+        //    return X + Width / 2;
+        //  }
+        public int CenterX => Width / 2;
 
-        public int CenterX { get { return Width / 2; } }
-        // This corresponds to the following in Java (can also be done like this in .NET):
+        // Java:
+        // This method uses an expression-bodied member (http://www.informit.com/articles/article.aspx?p=2414582) to simplify a method that only returns a value;
+        //  public int getCenterY(){
+        //    return Y + Height / 2;
+        //  }
+        public int CenterY => Height / 2;
 
-        // public int getCenterX(){
-        //   return X + Width / 2;
-        // }
-
-        public int CenterY { get { return Height / 2; } }
-        // This corresponds to the following in Java (can also be done like this in .NET):
-
-        // public int getCenterY(){
-        //   return Y + Height / 2;
-        // }
-        
         // ViewModel properties.
         // These properties should be in the ViewModel layer, but it is easier for the demo to put them here, 
         //  to avoid unnecessary complexity.
@@ -140,10 +141,13 @@ namespace _02350Demo.Model
         //       To learn how to avoid this and create an application with a more pure MVVM architecture pattern, 
         //        please ask the Teaching Assistants.
         private bool isSelected;
-        // TODO: Explain why no string is given.
-        // TODO: Explain why lambda is given.
+        // The reason no string is given to the 'NotifyPropertyChanged' method is because, 
+        //  it uses the compiler to get the name of the calling property, 
+        //  which in this case is the name of the property that has changed.
+        // A lambda expression can be given, because the 'NotifyPropertyChanged' method can get the property name from it.
         public bool IsSelected { get { return isSelected; } set { isSelected = value; NotifyPropertyChanged(); NotifyPropertyChanged(() => SelectedColor); } }
-        public Brush SelectedColor { get { return IsSelected ? Brushes.Red : Brushes.Yellow; } }
+        // This method uses an expression-bodied member (http://www.informit.com/articles/article.aspx?p=2414582) to simplify a method that only returns a value;
+        public Brush SelectedColor => IsSelected ? Brushes.Red : Brushes.Yellow;
 
         // Constructor.
         // The constructor is in this case used to set the default values for the properties.
@@ -156,9 +160,7 @@ namespace _02350Demo.Model
         // By overwriting the ToString() method, the default representation of the class is changed from the full namespace (Java: package) name, 
         //  to the value of the Number integer property, which is meant to be unique for each Shape object.
         // The ToString() method is inheritied from the Object class, that all classes inherit from.
-        public override string ToString()
-        {
-            return Number.ToString();
-        }
+        // This method uses an expression-bodied member (http://www.informit.com/articles/article.aspx?p=2414582) to simplify a method that only returns a value;
+        public override string ToString() => Number.ToString();
     }
 }

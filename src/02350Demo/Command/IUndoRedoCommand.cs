@@ -9,10 +9,14 @@ namespace _02350Demo.Command
     // Custom interface for implementing Undo/Redo commands.
     public interface IUndoRedoCommand
     {
-        // Methods (that has to be implemented).
-        // This method is for doing and redoing the command.
+        // Regions can be used to make code foldable (minus/plus sign to the left).
+        #region Methods (that has to be implemented)
+
+        // For doing and redoing the command.
         void Execute();
-        // This method is for undoing the command.
+        // For undoing the command.
         void UnExecute();
+
+        #endregion
     }
 }

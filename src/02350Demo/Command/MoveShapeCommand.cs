@@ -10,7 +10,9 @@ namespace _02350Demo.Command
     // Undo/Redo command for moving a Shape.
     public class MoveShapeCommand : IUndoRedoCommand
     {
-        // Fields.
+        // Regions can be used to make code foldable (minus/plus sign to the left).
+        #region Fields
+
         // The 'shape' field holds an existing shape, 
         //  and the reference points to the same object, 
         //  as one of the objects in the MainViewModels 'Shapes' ObservableCollection.
@@ -27,8 +29,11 @@ namespace _02350Demo.Command
         // The 'afterY' field holds the Y coordinate of the shape after it is moved.
         private int afterY;
 
-        // Constructor for saving and changing the current state of the diagram 
-        //  (or at least the relevant parts).
+        #endregion
+
+        #region Constructor
+
+        // For changing the current state of the diagram.
         public MoveShapeCommand(Shape _shape, int _beforeX, int _beforeY, int _afterX, int _afterY) 
         {
             shape = _shape;
@@ -38,19 +43,24 @@ namespace _02350Demo.Command
             afterY = _afterY;
         }
 
-        // Methods.
-        // This method is for doing and redoing the command.
+        #endregion
+
+        #region Methods
+
+        // For doing and redoing the command.
         public void Execute()
         {
             shape.CanvasCenterX = afterX;
             shape.CanvasCenterY = afterY;
         }
 
-        // This method is for undoing the command.
+        // For undoing the command.
         public void UnExecute()
         {
             shape.CanvasCenterX = beforeX;
             shape.CanvasCenterY = beforeY;
         }
+
+        #endregion
     }
 }

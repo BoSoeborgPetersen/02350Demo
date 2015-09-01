@@ -11,7 +11,9 @@ namespace _02350Demo.Command
     // Undo/Redo command for adding a Line.
     public class AddLineCommand : IUndoRedoCommand
     {
-        // Fields.
+        // Regions can be used to make code foldable (minus/plus sign to the left).
+        #region Fields
+
         // The 'lines' field holds the current collection of lines, 
         //  and the reference points to the same collection as the one the MainViewModel point to, 
         //  therefore when this collection is changed in a object of this class, 
@@ -22,25 +24,33 @@ namespace _02350Demo.Command
         //  and if undone, it is removed from the collection.
         private Line line;
 
-        // Constructor for saving and changing the current state of the diagram 
-        //  (or at least the relevant parts).
+        #endregion
+
+        #region Constructor
+
+        // For changing the current state of the diagram.
         public AddLineCommand(ObservableCollection<Line> _lines, Line _line) 
         { 
             lines = _lines;
             line = _line;
         }
 
-        // Methods.
-        // This method is for doing and redoing the command.
+        #endregion
+
+        #region Methods
+
+        // For doing and redoing the command.
         public void Execute()
         {
             lines.Add(line);
         }
 
-        // This method is for undoing the command.
+        // For undoing the command.
         public void UnExecute()
         {
             lines.Remove(line);
         }
+
+        #endregion
     }
 }
