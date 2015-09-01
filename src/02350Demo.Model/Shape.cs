@@ -23,7 +23,9 @@ namespace _02350Demo.Model
         public int Number { get; private set; }
 
         private int x = 200;
-        public int X { get { return x; } set { x = value; NotifyPropertyChanged("X"); NotifyPropertyChanged("CanvasCenterX"); } }
+        // TODO: Explain why no string is given.
+        // TODO: Explain why lambda is given.
+        public int X { get { return x; } set { x = value; NotifyPropertyChanged(); NotifyPropertyChanged(() => CanvasCenterX); } }
         // This corresponds to the following in Java (can also be done like this in .NET):
 
         // private Shape x;
@@ -39,7 +41,9 @@ namespace _02350Demo.Model
         // }
 
         private int y = 200;
-        public int Y { get { return y; } set { y = value; NotifyPropertyChanged("Y"); NotifyPropertyChanged("CanvasCenterY"); } }
+        // TODO: Explain why no string is given.
+        // TODO: Explain why lambda is given.
+        public int Y { get { return y; } set { y = value; NotifyPropertyChanged(); NotifyPropertyChanged(() => CanvasCenterY); } }
         // This corresponds to the following in Java (can also be done like this in .NET):
 
         // private Shape y;
@@ -55,7 +59,9 @@ namespace _02350Demo.Model
         // }
 
         private int width = 100;
-        public int Width { get { return width; } set { width = value; NotifyPropertyChanged("Width"); NotifyPropertyChanged("CanvasCenterX"); NotifyPropertyChanged("CenterX"); } }
+        // TODO: Explain why no string is given.
+        // TODO: Explain why lambda is given.
+        public int Width { get { return width; } set { width = value; NotifyPropertyChanged(); NotifyPropertyChanged(() => CanvasCenterX); NotifyPropertyChanged(() => CenterX); } }
         // This corresponds to the following in Java (can also be done like this in .NET):
 
         // private Shape width;
@@ -72,7 +78,9 @@ namespace _02350Demo.Model
         // }
 
         private int height = 100;
-        public int Height { get { return height; } set { height = value; NotifyPropertyChanged("Height"); NotifyPropertyChanged("CanvasCenterY"); NotifyPropertyChanged("CenterY"); } }
+        // TODO: Explain why no string is given.
+        // TODO: Explain why lambda is given.
+        public int Height { get { return height; } set { height = value; NotifyPropertyChanged(); NotifyPropertyChanged(() => CanvasCenterY); NotifyPropertyChanged(() => CenterY); } }
         // This corresponds to the following in Java (can also be done like this in .NET):
 
         // private Shape height;
@@ -97,8 +105,12 @@ namespace _02350Demo.Model
         //        but in this demo we need both these and derived properties for the coordinates of the Shape, 
         //        relative to the upper left corner of the Shape. This is an example of a breaking change, 
         //        that is changed during the lifetime of an application, because the requirements change.
-        public int CanvasCenterX { get { return X + Width / 2; } set { X = value - Width / 2; NotifyPropertyChanged("X"); } }
-        public int CanvasCenterY { get { return Y + Height / 2; } set { Y = value - Height / 2; NotifyPropertyChanged("Y"); } }
+
+        // TODO: Explain why lambda is given.
+        public int CanvasCenterX { get { return X + Width / 2; } set { X = value - Width / 2; NotifyPropertyChanged(() => X); } }
+
+        // TODO: Explain why lambda is given.
+        public int CanvasCenterY { get { return Y + Height / 2; } set { Y = value - Height / 2; NotifyPropertyChanged(() => Y); } }
         // The CenterX and CenterY properties are used by the Shape animation to define the point of rotation.
         // NOTE: These derived properties are diffent from the Shape properties with the same names, 
         //        from the 02350SuperSimpleDemo, see above for an explanation.
@@ -128,7 +140,9 @@ namespace _02350Demo.Model
         //       To learn how to avoid this and create an application with a more pure MVVM architecture pattern, 
         //        please ask the Teaching Assistants.
         private bool isSelected;
-        public bool IsSelected { get { return isSelected; } set { isSelected = value; NotifyPropertyChanged("IsSelected"); NotifyPropertyChanged("SelectedColor"); } }
+        // TODO: Explain why no string is given.
+        // TODO: Explain why lambda is given.
+        public bool IsSelected { get { return isSelected; } set { isSelected = value; NotifyPropertyChanged(); NotifyPropertyChanged(() => SelectedColor); } }
         public Brush SelectedColor { get { return IsSelected ? Brushes.Red : Brushes.Yellow; } }
 
         // Constructor.

@@ -15,7 +15,8 @@ namespace _02350Demo.Model
         //  which is to raise an INotifyPropertyChanged event that notifies the View (GUI) that this model property has changed, 
         //  so the graphical representation can be updated.
         private Shape from;
-        public Shape From { get { return from; } set { from = value; NotifyPropertyChanged("From"); } }
+        // TODO: Explain why no string is given.
+        public Shape From { get { return from; } set { from = value; NotifyPropertyChanged(); } }
         // This corresponds to the following in Java (can also be done like this in .NET):
 
         // private Shape from;
@@ -30,7 +31,8 @@ namespace _02350Demo.Model
         // }
 
         private Shape to;
-        public Shape To { get { return to; } set { to = value; NotifyPropertyChanged("To"); } }
+        // TODO: Explain why no string is given.
+        public Shape To { get { return to; } set { to = value; NotifyPropertyChanged(); } }
         // This corresponds to the following in Java (can also be done like this in .NET):
 
         // private Shape to;

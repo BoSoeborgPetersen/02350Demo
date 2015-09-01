@@ -128,7 +128,7 @@ namespace _02350Demo.ViewModel
         private void AddLine()
         {
             isAddingLine = true;
-            RaisePropertyChanged("ModeOpacity");
+            RaisePropertyChanged(() => ModeOpacity);
         }
 
         // Checks if the chosen Lines can be removed, which they can if at least one is chosen.
@@ -211,7 +211,7 @@ namespace _02350Demo.ViewModel
                     addingLineFrom = null;
                     // The property used for visually indicating which Shape has already chosen are choosen is cleared, 
                     //  so the View can return to its original and default apperance.
-                    RaisePropertyChanged("ModeOpacity");
+                    RaisePropertyChanged(() => ModeOpacity);
                 }
             }
             // Used for moving a Shape.
