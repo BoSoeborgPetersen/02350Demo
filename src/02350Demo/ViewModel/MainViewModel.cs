@@ -171,8 +171,8 @@ namespace _02350Demo.ViewModel
                 if (moveShapePoint == default(Point)) moveShapePoint = mousePosition;
                 // The Shape is moved to the position of the mouse in relation to the canvas.
                 // The View (GUI) is then notified by the Shape, that its properties have changed.
-                shapeModel.CanvasCenterX = (int)mousePosition.X;
-                shapeModel.CanvasCenterY = (int)mousePosition.Y;
+                shapeModel.CanvasCenterX = mousePosition.X;
+                shapeModel.CanvasCenterY = mousePosition.Y;
             }
         }
 
@@ -229,7 +229,7 @@ namespace _02350Demo.ViewModel
                 //  by using a MoveNodeCommand to move it.
                 // The MoveNodeCommand is given the original coordinates and with respect to the Undo/Redo functionality, 
                 //  the Shape has only been moved once, with this Command.
-                undoRedoController.AddAndExecute(new MoveShapeCommand(shape, (int)moveShapePoint.X, (int)moveShapePoint.Y, (int)mousePosition.X, (int)mousePosition.Y));
+                undoRedoController.AddAndExecute(new MoveShapeCommand(shape, moveShapePoint.X, moveShapePoint.Y, mousePosition.X, mousePosition.Y));
                 // The original Shape point before the move is cleared, so the MainViewModel is ready for the next move operation.
                 moveShapePoint = new Point();
                 // The mouse is released, as the move operation is done, so it can be used by other controls.

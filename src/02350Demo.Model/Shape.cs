@@ -19,83 +19,83 @@ namespace _02350Demo.Model
         //  and default getter method should be generated.
         public int Number { get; }
 
-        private int x = 200;
+        private double x = 200;
         // The reason no string is given to the 'NotifyPropertyChanged' method is because, 
         //  it uses the compiler to get the name of the calling property, 
         //  which in this case is the name of the property that has changed.
         // A lambda expression can be given, because the 'NotifyPropertyChanged' method can get the property name from it.
         // Java:
-        //  private Shape x;
+        //  private double x;
         // 
-        //  public Shape getX(){
+        //  public double getX(){
         //    return x;
         //  }
         //
-        //  public void setX(Shape value){
+        //  public void setX(double value){
         //    x = value;
         //    NotifyPropertyChanged();
         //    NotifyPropertyChanged("CanvasCenterX");
         //  }
-        public int X { get { return x; } set { x = value; NotifyPropertyChanged(); NotifyPropertyChanged(() => CanvasCenterX); } }
+        public double X { get { return x; } set { x = value; NotifyPropertyChanged(); NotifyPropertyChanged(() => CanvasCenterX); } }
 
-        private int y = 200;
+        private double y = 200;
         // The reason no string is given to the 'NotifyPropertyChanged' method is because, 
         //  it uses the compiler to get the name of the calling property, 
         //  which in this case is the name of the property that has changed.
         // A lambda expression can be given, because the 'NotifyPropertyChanged' method can get the property name from it.
         // Java:
-        //  private Shape y;
+        //  private double y;
         // 
-        //  public Shape getY(){
+        //  public double getY(){
         //    return y;
         //  }
         //
-        //  public void setY(Shape value){
+        //  public void setY(double value){
         //    y = value;
         //    NotifyPropertyChanged();
         //    NotifyPropertyChanged("CanvasCenterY");
         //  }
-        public int Y { get { return y; } set { y = value; NotifyPropertyChanged(); NotifyPropertyChanged(() => CanvasCenterY); } }
+        public double Y { get { return y; } set { y = value; NotifyPropertyChanged(); NotifyPropertyChanged(() => CanvasCenterY); } }
 
-        private int width = 100;
+        private double width = 100;
         // The reason no string is given to the 'NotifyPropertyChanged' method is because, 
         //  it uses the compiler to get the name of the calling property, 
         //  which in this case is the name of the property that has changed.
         // A lambda expression can be given, because the 'NotifyPropertyChanged' method can get the property name from it.
         // Java:
-        //  private Shape width;
+        //  private double width;
         // 
-        //  public Shape getWidth(){
+        //  public double getWidth(){
         //    return width;
         //  }
         //
-        //  public void setWidth(Shape value){
+        //  public void setWidth(double value){
         //    width = value;
         //    NotifyPropertyChanged();
         //    NotifyPropertyChanged("CanvasCenterX");
         //    NotifyPropertyChanged("CenterX");
         //  }
-        public int Width { get { return width; } set { width = value; NotifyPropertyChanged(); NotifyPropertyChanged(() => CanvasCenterX); NotifyPropertyChanged(() => CenterX); } }
+        public double Width { get { return width; } set { width = value; NotifyPropertyChanged(); NotifyPropertyChanged(() => CanvasCenterX); NotifyPropertyChanged(() => CenterX); } }
 
-        private int height = 100;
+        private double height = 100;
         // The reason no string is given to the 'NotifyPropertyChanged' method is because, 
         //  it uses the compiler to get the name of the calling property, 
         //  which in this case is the name of the property that has changed.
         // A lambda expression can be given, because the 'NotifyPropertyChanged' method can get the property name from it.
         // Java:
-        //  private Shape height;
+        //  private double height;
         // 
-        //  public Shape getHeight(){
+        //  public double getHeight(){
         //    return height;
         //  }
         //
-        //  public void setHeight(Shape value){
+        //  public void setHeight(double value){
         //    height = value;
         //    NotifyPropertyChanged();
         //    NotifyPropertyChanged("CanvasCenterY");
         //    NotifyPropertyChanged("CenterY");
         //  }
-        public int Height { get { return height; } set { height = value; NotifyPropertyChanged(); NotifyPropertyChanged(() => CanvasCenterY); NotifyPropertyChanged(() => CenterY); } }
+        public double Height { get { return height; } set { height = value; NotifyPropertyChanged(); NotifyPropertyChanged(() => CanvasCenterY); NotifyPropertyChanged(() => CenterY); } }
 
         // Derived properties.
         // Corresponds to making a Getter method in Java (for instance 'public int GetCenterX()'), 
@@ -108,27 +108,27 @@ namespace _02350Demo.Model
         //        that is changed during the lifetime of an application, because the requirements change.
 
         // A lambda expression can be given, because the 'NotifyPropertyChanged' method can get the property name from it.
-        public int CanvasCenterX { get { return X + Width / 2; } set { X = value - Width / 2; NotifyPropertyChanged(() => X); } }
+        public double CanvasCenterX { get { return X + Width / 2; } set { X = value - Width / 2; NotifyPropertyChanged(() => X); } }
 
         // A lambda expression can be given, because the 'NotifyPropertyChanged' method can get the property name from it.
-        public int CanvasCenterY { get { return Y + Height / 2; } set { Y = value - Height / 2; NotifyPropertyChanged(() => Y); } }
+        public double CanvasCenterY { get { return Y + Height / 2; } set { Y = value - Height / 2; NotifyPropertyChanged(() => Y); } }
 
         // The CenterX and CenterY properties are used by the Shape animation to define the point of rotation.
         // NOTE: These derived properties are diffent from the Shape properties with the same names, 
         //        from the 02350SuperSimpleDemo, see above for an explanation.
         // This method uses an expression-bodied member (http://www.informit.com/articles/article.aspx?p=2414582) to simplify a method that only returns a value;
         // Java:
-        //  public int getCenterX(){
+        //  public double getCenterX(){
         //    return X + Width / 2;
         //  }
-        public int CenterX => Width / 2;
+        public double CenterX => Width / 2;
 
         // Java:
         // This method uses an expression-bodied member (http://www.informit.com/articles/article.aspx?p=2414582) to simplify a method that only returns a value;
-        //  public int getCenterY(){
+        //  public double getCenterY(){
         //    return Y + Height / 2;
         //  }
-        public int CenterY => Height / 2;
+        public double CenterY => Height / 2;
 
         // ViewModel properties.
         // These properties should be in the ViewModel layer, but it is easier for the demo to put them here, 

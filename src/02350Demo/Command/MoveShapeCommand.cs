@@ -21,20 +21,20 @@ namespace _02350Demo.Command
         private Shape shape;
 
         // The 'beforeX' field holds the X coordinate of the shape before it is moved.
-        private int beforeX;
+        private double beforeX;
         // The 'beforeY' field holds the Y coordinate of the shape after it is moved.
-        private int beforeY;
+        private double beforeY;
         // The 'afterX' field holds the X coordinate of the shape before it is moved.
-        private int afterX;
+        private double afterX;
         // The 'afterY' field holds the Y coordinate of the shape after it is moved.
-        private int afterY;
+        private double afterY;
 
         #endregion
 
         #region Constructor
 
         // For changing the current state of the diagram.
-        public MoveShapeCommand(Shape _shape, int _beforeX, int _beforeY, int _afterX, int _afterY) 
+        public MoveShapeCommand(Shape _shape, double _beforeX, double _beforeY, double _afterX, double _afterY) 
         {
             shape = _shape;
             beforeX = _beforeX;
