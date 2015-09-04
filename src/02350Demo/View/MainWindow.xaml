@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ViewModel="clr-namespace:_02350Demo.ViewModel"
         xmlns:View="clr-namespace:_02350Demo.View"
-        Title="02350 Demo" Height="600" Width="800">
+        Title="02350 Demo" Height="600" Width="800" Icon="/Icon.ico">
     <!-- This is where you set the Data Context of the View (Window), which tells the WPF engine where to look for the properties used by the bindings. -->
     <!-- The namespace of the MainViewModel class has to be specified above, this is important to remember, to avoid a lot of problems in getting bindings to work. -->
     <!-- Also the namespaces (Java: packages) has to be defined, for the used classes that are not part of WPF, -->
