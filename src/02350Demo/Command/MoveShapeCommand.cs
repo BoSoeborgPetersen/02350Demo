@@ -20,27 +20,21 @@ namespace _02350Demo.Command
         //  and if undone the coordinates are changed back to the original coordinates.
         private Shape shape;
 
-        // The 'beforeX' field holds the X coordinate of the shape before it is moved.
-        private double beforeX;
-        // The 'beforeY' field holds the Y coordinate of the shape after it is moved.
-        private double beforeY;
-        // The 'afterX' field holds the X coordinate of the shape before it is moved.
-        private double afterX;
-        // The 'afterY' field holds the Y coordinate of the shape after it is moved.
-        private double afterY;
+        // The 'offsetX' field holds the offset (difference) between the original and final X coordinate.
+        private double offsetX;
+        // The 'offsetY' field holds the offset (difference) between the original and final Y coordinate.
+        private double offsetY;
 
         #endregion
 
         #region Constructor
 
         // For changing the current state of the diagram.
-        public MoveShapeCommand(Shape _shape, double _beforeX, double _beforeY, double _afterX, double _afterY) 
+        public MoveShapeCommand(Shape _shape, double _offsetX, double _offsetY) 
         {
             shape = _shape;
-            beforeX = _beforeX;
-            beforeY = _beforeY;
-            afterX = _afterX;
-            afterY = _afterY;
+            offsetX = _offsetX;
+            offsetY = _offsetY;
         }
 
         #endregion
@@ -50,15 +44,15 @@ namespace _02350Demo.Command
         // For doing and redoing the command.
         public void Execute()
         {
-            shape.CanvasCenterX = afterX;
-            shape.CanvasCenterY = afterY;
+            shape.CanvasCenterX += offsetX;
+            shape.CanvasCenterY += offsetY;
         }
 
         // For undoing the command.
         public void UnExecute()
         {
-            shape.CanvasCenterX = beforeX;
-            shape.CanvasCenterY = beforeY;
+            shape.CanvasCenterX -= offsetX;
+            shape.CanvasCenterY -= offsetY;
         }
 
         #endregion

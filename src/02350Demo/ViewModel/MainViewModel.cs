@@ -31,7 +31,9 @@ namespace _02350Demo.ViewModel
         // Used for saving the shape that a line is drawn from, while it is being drawn.
         private Shape addingLineFrom;
         // Saves the initial point that the mouse has during a move operation.
-        private Point moveShapePoint;
+        private Point initialMousePosition;
+        // Saves the initial point that the shape has during a move operation.
+        private Point initialShapePosition;
         // Used for making the shapes transparent when a new line is being added.
         // This method uses an expression-bodied member (http://www.informit.com/articles/article.aspx?p=2414582) to simplify a method that only returns a value;
         public double ModeOpacity => isAddingLine ? 0.4 : 1.0;
@@ -146,7 +148,27 @@ namespace _02350Demo.ViewModel
         // The reason for the capture is to receive mouse move events, even when the mouse is outside the application window.
         private void MouseDownShape(MouseButtonEventArgs e)
         {
-            if (!isAddingLine) e.MouseDevice.Target.CaptureMouse();
+            // Checks that a line is not being drawn.
+            if (!isAddingLine)
+            {
+                // The Shape is gotten from the mouse event.
+                var shape = TargetShape(e);
+                // The mouse position relative to the target of the mouse event.
+                var mousePosition = RelativeMousePosition(e);
+
+                // When the shape is moved with the mouse, the MouseMoveShape method is called many times, 
+                //  for each part of the movement.
+                // Therefore to only have 1 Undo/Redo command saved for the whole movement, the initial position is saved, 
+                //  during the start of the movement, so that it together with the final position, 
+                //  from when the mouse is released, can become one Undo/Redo command.
+                // The initial shape position is saved to calculate the offset that the shape should be moved.
+                initialMousePosition = mousePosition;
+                initialShapePosition = new Point(shape.X, shape.Y);
+
+                // The mouse is captured, so the current shape will always be the target of the mouse events, 
+                //  even if the mouse is outside the application window.
+                e.MouseDevice.Target.CaptureMouse();
+            }
         }
 
         // This is only used for moving a Shape, and only if the mouse is already captured.
@@ -156,23 +178,15 @@ namespace _02350Demo.ViewModel
             // Checks that the mouse is captured and that a line is not being drawn.
             if (Mouse.Captured != null && !isAddingLine)
             {
-                // It is now known that the mouse is captured and here the visual element that the mouse is captured by is retrieved.
-                var shapeVisualElement = (FrameworkElement)e.MouseDevice.Target;
-                // From the shapes visual element, the Shape object which is the DataContext is retrieved.
-                var shapeModel = (Shape)shapeVisualElement.DataContext;
-                // The canvas holding the shapes visual element, is found by searching up the tree of visual elements.
-                var canvas = FindParentOfType<Canvas>(shapeVisualElement);
-                // The mouse position relative to the canvas is gotten here.
-                var mousePosition = Mouse.GetPosition(canvas);
-                // When the shape is moved with the mouse, this method is called many times, for each part of the movement.
-                // Therefore to only have 1 Undo/Redo command saved for the whole movement, the initial position is saved, 
-                //  during the first part of the movement, so that it together with the final position, 
-                //  from when the mouse is released, can become one Undo/Redo command.
-                if (moveShapePoint == default(Point)) moveShapePoint = mousePosition;
-                // The Shape is moved to the position of the mouse in relation to the canvas.
+                // The Shape is gotten from the mouse event.
+                var shape = TargetShape(e);
+                // The mouse position relative to the target of the mouse event.
+                var mousePosition = RelativeMousePosition(e);
+
+                // The Shape is moved by the offset between the original and current mouse position.
                 // The View (GUI) is then notified by the Shape, that its properties have changed.
-                shapeModel.CanvasCenterX = mousePosition.X;
-                shapeModel.CanvasCenterY = mousePosition.Y;
+                shape.X = initialShapePosition.X + (mousePosition.X - initialMousePosition.X);
+                shape.Y = initialShapePosition.Y + (mousePosition.Y - initialMousePosition.Y);
             }
         }
 
@@ -187,9 +201,7 @@ namespace _02350Demo.ViewModel
             {
                 // Because a MouseUp event has happened and a Line is currently being drawn, 
                 //  the Shape that the Line is drawn from or to has been selected, and is here retrieved from the event parameters.
-                var shapeVisualElement = (FrameworkElement)e.MouseDevice.Target;
-                // From the shapes visual element, the Shape object which is the DataContext is retrieved.
-                var shape = (Shape)shapeVisualElement.DataContext;
+                var shape = TargetShape(e);
                 // This checks if this is the first Shape chosen during the Line adding operation, 
                 //  by looking at the addingLineFrom variable, which is empty when no Shapes have previously been choosen.
                 // If this is the first Shape choosen, and if so, the Shape is saved in the AddingLineFrom variable.
@@ -217,24 +229,44 @@ namespace _02350Demo.ViewModel
             // Used for moving a Shape.
             else
             {
-                // Here the visual element that the mouse is captured by is retrieved.
-                var shapeVisualElement = (FrameworkElement)e.MouseDevice.Target;
-                // From the shapes visual element, the Shape object which is the DataContext is retrieved.
-                var shape = (Shape)shapeVisualElement.DataContext;
-                // The canvas holding the shapes visual element, is found by searching up the tree of visual elements.
-                var canvas = FindParentOfType<Canvas>(shapeVisualElement);
-                // The mouse position relative to the canvas is gotten here.
-                var mousePosition = Mouse.GetPosition(canvas);
-                // Now that the Move Shape operation is over, the Shape is moved to the final position (coordinates), 
+                // The Shape is gotten from the mouse event.
+                var shape = TargetShape(e);
+                // The mouse position relative to the target of the mouse event.
+                var mousePosition = RelativeMousePosition(e);
+
+                // The Shape is moved back to its original position, so the offset given to the move command works.
+                shape.X = initialShapePosition.X;
+                shape.Y = initialShapePosition.Y;
+
+                // Now that the Move Shape operation is over, the Shape is moved to the final position, 
                 //  by using a MoveNodeCommand to move it.
-                // The MoveNodeCommand is given the original coordinates and with respect to the Undo/Redo functionality, 
-                //  the Shape has only been moved once, with this Command.
-                undoRedoController.AddAndExecute(new MoveShapeCommand(shape, moveShapePoint.X, moveShapePoint.Y, mousePosition.X, mousePosition.Y));
-                // The original Shape point before the move is cleared, so the MainViewModel is ready for the next move operation.
-                moveShapePoint = new Point();
+                // The MoveNodeCommand is given the offset that it should be moved relative to its original position, 
+                //  and with respect to the Undo/Redo functionality the Shape has only been moved once, with this Command.
+                undoRedoController.AddAndExecute(new MoveShapeCommand(shape, mousePosition.X - initialMousePosition.X, mousePosition.Y - initialMousePosition.Y));
+                
                 // The mouse is released, as the move operation is done, so it can be used by other controls.
                 e.MouseDevice.Target.ReleaseMouseCapture();
             }
+        }
+
+        // Gets the shape that was clicked.
+        private Shape TargetShape(MouseEventArgs e)
+        {
+            // Here the visual element that the mouse is captured by is retrieved.
+            var shapeVisualElement = (FrameworkElement)e.MouseDevice.Target;
+            // From the shapes visual element, the Shape object which is the DataContext is retrieved.
+            return (Shape)shapeVisualElement.DataContext;
+        }
+
+        // Gets the mouse position relative to the canvas.
+        private Point RelativeMousePosition(MouseEventArgs e)
+        {
+            // Here the visual element that the mouse is captured by is retrieved.
+            var shapeVisualElement = (FrameworkElement)e.MouseDevice.Target;
+            // The canvas holding the shapes visual element, is found by searching up the tree of visual elements.
+            var canvas = FindParentOfType<Canvas>(shapeVisualElement);
+            // The mouse position relative to the canvas is gotten here.
+            return Mouse.GetPosition(canvas);
         }
 
         // Recursive method for finding the parent of a visual element of a certain type, 
