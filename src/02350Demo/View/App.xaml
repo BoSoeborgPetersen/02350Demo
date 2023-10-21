@@ -7,7 +7,7 @@
     <!-- This is where resources are defines for alle windows to use. -->
     <Application.Resources>
         <!-- This Data Template tells the View (Window) how to visually show the Shape class. -->
-        <!-- This Visual description is defined in the 'NodeUserControl'. -->
+        <!-- This Visual description is defined in the 'ShapeUserControl'. -->
         <!-- If you remove this template the Shape will be show with a TextBlock, that shows the return value of the "ToString()" method. -->
         <!-- The Data Type tells the WPF engine, that this Data Template should be applied for the Shape class, in the Model namespace (Java: package). -->
         <DataTemplate DataType="{x:Type Model:Shape}">
@@ -16,7 +16,7 @@
             </Canvas>
         </DataTemplate>
         <!-- This Data Template tells the View (Window) how to visually show the Line class. -->
-        <!-- This Visual description is defined in the 'EdgeUserControl'. -->
+        <!-- This Visual description is defined in the 'LineUserControl'. -->
         <DataTemplate DataType="{x:Type Model:Line}">
             <Canvas>
                 <View:LineUserControl/>

@@ -1,10 +1,6 @@
 ﻿using _02350Demo.Model;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace _02350Demo.Command
 {
@@ -31,7 +27,7 @@ namespace _02350Demo.Command
 
         // For changing the current state of the diagram 
         //  (or at least the relevant parts).
-        public RemoveLinesCommand(ObservableCollection<Line> _lines, List<Line> _linesToRemove) 
+        public RemoveLinesCommand(ObservableCollection<Line> _lines, List<Line> _linesToRemove)
         {
             lines = _lines;
             linesToRemove = _linesToRemove;

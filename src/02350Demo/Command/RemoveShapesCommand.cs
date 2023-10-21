@@ -1,10 +1,7 @@
 ﻿using _02350Demo.Model;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace _02350Demo.Command
 {
@@ -54,17 +51,13 @@ namespace _02350Demo.Command
             //
             //  foreach (Line line in _lines)
             //  { 
-            //    bool inBothCollections;
-            //
             //    foreach (Line lineToRemove in _shapesToRemove)
             //    {
             //      if(lineToRemove.Number == line.From.Number || lineToRemove.Number == line.To.Number)
             //      {
-            //        inBothCollections = true;
+            //        linesToRemove.Add(line);
             //      }
             //    }
-            //
-            //    linesToRemove.Add(line);
             //  }
             linesToRemove = _lines.Where(x => _shapesToRemove.Any(y => y.Number == x.From.Number || y.Number == x.To.Number)).ToList();
         }

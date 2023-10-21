@@ -1,9 +1,4 @@
 ﻿using _02350Demo.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace _02350Demo.Command
 {
@@ -30,7 +25,7 @@ namespace _02350Demo.Command
         #region Constructor
 
         // For changing the current state of the diagram.
-        public MoveShapeCommand(Shape _shape, double _offsetX, double _offsetY) 
+        public MoveShapeCommand(Shape _shape, double _offsetX, double _offsetY)
         {
             shape = _shape;
             offsetX = _offsetX;

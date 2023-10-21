@@ -1,10 +1,5 @@
 ﻿using _02350Demo.Model;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace _02350Demo.Command
 {
@@ -29,8 +24,8 @@ namespace _02350Demo.Command
         #region Constructor
 
         // For changing the current state of the diagram.
-        public AddShapeCommand(ObservableCollection<Shape> _shapes, Shape _shape) 
-        { 
+        public AddShapeCommand(ObservableCollection<Shape> _shapes, Shape _shape)
+        {
             shapes = _shapes;
             shape = _shape;
         }

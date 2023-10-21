@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace _02350Demo.Command
 {
@@ -15,9 +13,9 @@ namespace _02350Demo.Command
         #region Fields
 
         // The Undo stack, holding the Undo/Redo commands that have been executed.
-        private readonly Stack<IUndoRedoCommand> undoStack = new Stack<IUndoRedoCommand>();
+        private readonly Stack<IUndoRedoCommand> undoStack = new();
         // The Redo stack, holding the Undo/Redo commands that have been executed and then unexecuted (undone).
-        private readonly Stack<IUndoRedoCommand> redoStack = new Stack<IUndoRedoCommand>();
+        private readonly Stack<IUndoRedoCommand> redoStack = new();
 
         #endregion
 
@@ -35,7 +33,7 @@ namespace _02350Demo.Command
         //  {
         //    return instance;
         //  }
-        public static UndoRedoController Instance { get; } = new UndoRedoController();
+        public static UndoRedoController Instance { get; } = new();
 
         #endregion
 
