@@ -1,303 +1,168 @@
-﻿using _02350Demo.Command;
-using _02350Demo.Model;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Collections;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
+﻿namespace _02350Demo.ViewModel;
 
-namespace _02350Demo.ViewModel
+public class MainViewModel : ObservableRecipient
 {
-    // Use the <summary>...</summary> syntax to create XML Comments, used by Intellisence (Java: Content Assist), 
-    // and to generate many types of documentation.
-    /// <summary>
-    /// This ViewModel is bound to the MainWindow View.
-    /// </summary>
-    public class MainViewModel : ObservableRecipient
+    private readonly UndoRedoController undoRedoController = UndoRedoController.Instance;
+
+    private bool isAddingLine;
+    private Shape addingLineFrom;
+    private Point initialMousePosition;
+    private Point initialShapePosition;
+    public double ModeOpacity => isAddingLine ? 0.4 : 1.0;
+
+    public ObservableCollection<Shape> Shapes { get; set; }
+    public ObservableCollection<Line> Lines { get; set; }
+
+    public RelayCommand UndoCommand { get; }
+    public RelayCommand RedoCommand { get; }
+
+    public RelayCommand AddShapeCommand { get; }
+    public RelayCommand ShapesSelectionChangedCommand { get; }
+    public RelayCommand<IList> RemoveShapeCommand { get; }
+    public RelayCommand AddLineCommand { get; }
+    public RelayCommand LinesSelectionChangedCommand { get; }
+    public RelayCommand<IList> RemoveLinesCommand { get; }
+
+    public RelayCommand<MouseButtonEventArgs> MouseDownShapeCommand { get; }
+    public RelayCommand<MouseEventArgs> MouseMoveShapeCommand { get; }
+    public RelayCommand<MouseButtonEventArgs> MouseUpShapeCommand { get; }
+
+    public MainViewModel()
     {
-        // A reference to the Undo/Redo controller.
-        private UndoRedoController undoRedoController = UndoRedoController.Instance;
+        Shapes = new() {
+            new Shape() { Position = new(30, 40), Size = new(80, 80) },
+            new Shape() { Position = new(140, 230), Size = new(100, 100) }
+        };
+        Lines = new() {
+            new Line() { From = Shapes[0], To = Shapes[1] }
+        };
 
-        // Keeps track of the state, depending on whether a line is being added or not.
-        private bool isAddingLine;
-        // Used for saving the shape that a line is drawn from, while it is being drawn.
-        private Shape addingLineFrom;
-        // Saves the initial point that the mouse has during a move operation.
-        private Point initialMousePosition;
-        // Saves the initial point that the shape has during a move operation.
-        private Point initialShapePosition;
-        // Used for making the shapes transparent when a new line is being added.
-        // This method uses an expression-bodied member (http://www.informit.com/articles/article.aspx?p=2414582) to simplify a method that only returns a value;
-        public double ModeOpacity => isAddingLine ? 0.4 : 1.0;
+        UndoCommand = new(Undo, undoRedoController.CanUndo);
+        RedoCommand = new(Redo, undoRedoController.CanRedo);
 
-        // The purpose of using an ObservableCollection instead of a List is that it implements the INotifyCollectionChanged interface, 
-        //  which is different from the INotifyPropertyChanged interface.
-        // By implementing the INotifyCollectionChanged interface, an event is thrown whenever an element is added or removed from the collection.
-        // The INotifyCollectionChanged event is then used by the View, 
-        //  which update the graphical representation to show the elements that are now in the collection.
-        // Also the collection is generic ("<Type>"), which means that it can be defined to hold all kinds of objects (and primitives), 
-        //  but at runtime it is optimized for the specific type and can only hold that type.
-        // The "{ get; set; }" syntax describes that a private field 
-        //  and default getter setter methods should be generated.
-        // This is called Auto-Implemented Properties (http://msdn.microsoft.com/en-us/library/bb384054.aspx).
-        public ObservableCollection<Shape> Shapes { get; set; }
-        public ObservableCollection<Line> Lines { get; set; }
+        AddShapeCommand = new(AddShape);
+        ShapesSelectionChangedCommand = new(() => RemoveShapeCommand.NotifyCanExecuteChanged());
+        RemoveShapeCommand = new(RemoveShape, (_shapes) => _shapes.Count == 1);
+        AddLineCommand = new(AddLine);
+        LinesSelectionChangedCommand = new(() => RemoveLinesCommand.NotifyCanExecuteChanged());
+        RemoveLinesCommand = new(RemoveLines, (_edges) => _edges.Count >= 1);
 
-        // Commands that the UI can be bound to.
-        // These are read-only properties that can only be set in the constructor.
-        public RelayCommand UndoCommand { get; }
-        public RelayCommand RedoCommand { get; }
+        MouseDownShapeCommand = new(MouseDownShape);
+        MouseMoveShapeCommand = new(MouseMoveShape);
+        MouseUpShapeCommand = new(MouseUpShape);
+    }
 
-        // Commands that the UI can be bound to.
-        public RelayCommand AddShapeCommand { get; }
-        public RelayCommand ShapesSelectionChangedCommand { get; }
-        public RelayCommand<IList> RemoveShapeCommand { get; }
-        public RelayCommand AddLineCommand { get; }
-        public RelayCommand LinesSelectionChangedCommand { get; }
-        public RelayCommand<IList> RemoveLinesCommand { get; }
+    private void Undo()
+    {
+        undoRedoController.Undo();
+        UndoCommand.NotifyCanExecuteChanged();
+        RedoCommand.NotifyCanExecuteChanged();
+    }
 
-        // Commands that the UI can be bound to.
-        public RelayCommand<MouseButtonEventArgs> MouseDownShapeCommand { get; }
-        public RelayCommand<MouseEventArgs> MouseMoveShapeCommand { get; }
-        public RelayCommand<MouseButtonEventArgs> MouseUpShapeCommand { get; }
+    private void Redo()
+    {
+        undoRedoController.Redo();
+        UndoCommand.NotifyCanExecuteChanged();
+        RedoCommand.NotifyCanExecuteChanged();
+    }
 
-        public MainViewModel()
+    private void AddShape()
+    {
+        undoRedoController.AddAndExecute(new AddShapeCommand(Shapes, new()));
+        UndoCommand.NotifyCanExecuteChanged();
+    }
+
+    private void RemoveShape(IList _shapes)
+    {
+        var shapesToRemove = _shapes.Cast<Shape>().ToList();
+        var linesToRemove = Lines.Where(x => shapesToRemove.Any(y => y.Number == x.From.Number || y.Number == x.To.Number)).ToList();
+        undoRedoController.AddAndExecute(new RemoveShapesCommand(Shapes, Lines, shapesToRemove, linesToRemove));
+        UndoCommand.NotifyCanExecuteChanged();
+    }
+
+    private void AddLine()
+    {
+        isAddingLine = true;
+        OnPropertyChanged(nameof(ModeOpacity));
+    }
+
+    private void RemoveLines(IList _lines)
+    {
+        undoRedoController.AddAndExecute(new RemoveLinesCommand(Lines, _lines.Cast<Line>().ToList()));
+        UndoCommand.NotifyCanExecuteChanged();
+    }
+
+    private void MouseDownShape(MouseButtonEventArgs e)
+    {
+        if (!isAddingLine)
         {
-            // Here the list of Shapes is filled with 2 Nodes. 
-            // The "new Type() { prop1 = value1, prop2 = value }" syntax is called an Object Initializer, which creates an object and sets its values.
-            // Java:
-            //  Shape shape1 = new Shape();
-            //  shape1.X = 30;
-            //  shape1.Y = 40;
-            //  shape1.Width = 80;
-            //  shape1.Height = 80;
-            // Also a constructor could be created for the Shape class that takes the parameters (X, Y, Width and Height), 
-            //  and the following could be done:
-            // new Shape(30, 40, 80, 80);
-            Shapes = new() {
-                new Shape() { X = 30, Y = 40, Width = 80, Height = 80 },
-                new Shape() { X = 140, Y = 230, Width = 100, Height = 100 }
-            };
-            // Here the list of Lines is filled with 1 Line that connects the 2 Shapes in the Shapes collection.
-            // ElementAt() is an Extension Method, that like many others can be used on all types of collections.
-            // It works just like the "Shapes[0]" syntax would be used for arrays.
-            Lines = new() {
-                new Line() { From = Shapes.ElementAt(0), To = Shapes.ElementAt(1) }
-            };
+            var shape = TargetShape(e);
+            var mousePosition = RelativeMousePosition(e);
 
-            // The commands are given the methods they should use to execute, and find out if they can execute.
-            // For these commands the methods are not part of the MainViewModel, but part of the UndoRedoController.
-            // Here, the UndoRedoController methods are called on command invocation.
-            UndoCommand = new(Undo, undoRedoController.CanUndo);
-            RedoCommand = new(Redo, undoRedoController.CanRedo);
+            initialMousePosition = mousePosition;
+            initialShapePosition = shape.Position;
 
-            // The commands are given the methods they should use to execute, and find out if they can execute.
-            AddShapeCommand = new(AddShape);
-            ShapesSelectionChangedCommand = new(() => RemoveShapeCommand.NotifyCanExecuteChanged());
-            RemoveShapeCommand = new(RemoveShape, CanRemoveShape);
-            AddLineCommand = new(AddLine);
-            LinesSelectionChangedCommand = new(() => RemoveLinesCommand.NotifyCanExecuteChanged());
-            RemoveLinesCommand = new(RemoveLines, CanRemoveLines);
-
-            // The commands are given the methods they should use to execute, and find out if they can execute.
-            MouseDownShapeCommand = new(MouseDownShape);
-            MouseMoveShapeCommand = new(MouseMoveShape);
-            MouseUpShapeCommand = new(MouseUpShape);
+            e.MouseDevice.Target.CaptureMouse();
         }
+    }
 
-        // Undoes previous command.
-        private void Undo()
+    private void MouseMoveShape(MouseEventArgs e)
+    {
+        if (Mouse.Captured != null && !isAddingLine)
         {
-            undoRedoController.Undo();
-            UndoCommand.NotifyCanExecuteChanged();
-            RedoCommand.NotifyCanExecuteChanged();
+            var shape = TargetShape(e);
+            var mousePosition = RelativeMousePosition(e);
+
+            shape.Position = initialShapePosition + (mousePosition - initialMousePosition);
         }
+    }
 
-        // Redoes previously undone command.
-        private void Redo()
+    private void MouseUpShape(MouseButtonEventArgs e)
+    {
+        if (isAddingLine)
         {
-            undoRedoController.Redo();
-            UndoCommand.NotifyCanExecuteChanged();
-            RedoCommand.NotifyCanExecuteChanged();
-        }
-
-        // Adds a Shape with an AddShapeCommand.
-        private void AddShape()
-        {
-            undoRedoController.AddAndExecute(new AddShapeCommand(Shapes, new()));
-            UndoCommand.NotifyCanExecuteChanged();
-        }
-
-        // Checks if the chosen Shapes can be removed, which they can if exactly 1 is chosen.
-        // This method uses an expression-bodied member (http://www.informit.com/articles/article.aspx?p=2414582) to simplify a method that only returns a value;
-        private bool CanRemoveShape(IList _shapes) => _shapes.Count == 1;
-
-        // Removes the chosen Shapes with a RemoveShapesCommand.
-        private void RemoveShape(IList _shapes)
-        {
-            undoRedoController.AddAndExecute(new RemoveShapesCommand(Shapes, Lines, _shapes.Cast<Shape>().ToList()));
-            UndoCommand.NotifyCanExecuteChanged();
-        }
-
-        // Starts the procedure to add a Line, by changing the mode to 'isAddingLine', 
-        //  and changing the visual representation of the shapes.
-        private void AddLine()
-        {
-            isAddingLine = true;
-            OnPropertyChanged(nameof(ModeOpacity));
-        }
-
-        // Checks if the chosen Lines can be removed, which they can if at least one is chosen.
-        // This method uses an expression-bodied member (http://www.informit.com/articles/article.aspx?p=2414582) to simplify a method that only returns a value;
-        private bool CanRemoveLines(IList _edges) => _edges.Count >= 1;
-
-        // Removes the chosen Lines with a RemoveLinesCommand.
-        private void RemoveLines(IList _lines)
-        {
-            undoRedoController.AddAndExecute(new RemoveLinesCommand(Lines, _lines.Cast<Line>().ToList()));
-            UndoCommand.NotifyCanExecuteChanged();
-        }
-
-        // There are two reasons for doing a 'MouseDown' on a Shape, to move it or to draw a line from it.
-        // If the state is not 'isAddingLine', the mouse is captured, to move the Shape.
-        // The reason for the capture is to receive mouse move events, even when the mouse is outside the application window.
-        private void MouseDownShape(MouseButtonEventArgs e)
-        {
-            // Checks that a line is not being drawn.
-            if (!isAddingLine)
+            var shape = TargetShape(e);
+            if (addingLineFrom == null) { addingLineFrom = shape; addingLineFrom.IsSelected = true; }
+            else if (addingLineFrom.Number != shape.Number)
             {
-                // The Shape is gotten from the mouse event.
-                var shape = TargetShape(e);
-                // The mouse position relative to the target of the mouse event.
-                var mousePosition = RelativeMousePosition(e);
-
-                // When the shape is moved with the mouse, the MouseMoveShape method is called many times, 
-                //  for each part of the movement.
-                // Therefore to only have 1 Undo/Redo command saved for the whole movement, the initial position is saved, 
-                //  during the start of the movement, so that it together with the final position, 
-                //  from when the mouse is released, can become one Undo/Redo command.
-                // The initial shape position is saved to calculate the offset that the shape should be moved.
-                initialMousePosition = mousePosition;
-                initialShapePosition = new(shape.X, shape.Y);
-
-                // The mouse is captured, so the current shape will always be the target of the mouse events, 
-                //  even if the mouse is outside the application window.
-                e.MouseDevice.Target.CaptureMouse();
-            }
-        }
-
-        // This is only used for moving a Shape, and only if the mouse is already captured.
-        // This uses 'var' which is an implicit type variable (https://msdn.microsoft.com/en-us/library/bb383973.aspx).
-        private void MouseMoveShape(MouseEventArgs e)
-        {
-            // Checks that the mouse is captured and that a line is not being drawn.
-            if (Mouse.Captured != null && !isAddingLine)
-            {
-                // The Shape is gotten from the mouse event.
-                var shape = TargetShape(e);
-                // The mouse position relative to the target of the mouse event.
-                var mousePosition = RelativeMousePosition(e);
-
-                // The Shape is moved by the offset between the original and current mouse position.
-                // The View (GUI) is then notified by the Shape, that its properties have changed.
-                shape.X = initialShapePosition.X + (mousePosition.X - initialMousePosition.X);
-                shape.Y = initialShapePosition.Y + (mousePosition.Y - initialMousePosition.Y);
-            }
-        }
-
-        // There are two reasons for doing a 'MouseUp'.
-        // Either a Line is being drawn, and the second Shape has just been chosen
-        //  or a Shape is being moved and the move is now done.
-        // This uses 'var' which is an implicit type variable (https://msdn.microsoft.com/en-us/library/bb383973.aspx).
-        private void MouseUpShape(MouseButtonEventArgs e)
-        {
-            // Used for adding a Line.
-            if (isAddingLine)
-            {
-                // Because a MouseUp event has happened and a Line is currently being drawn, 
-                //  the Shape that the Line is drawn from or to has been selected, and is here retrieved from the event parameters.
-                var shape = TargetShape(e);
-                // This checks if this is the first Shape chosen during the Line adding operation, 
-                //  by looking at the addingLineFrom variable, which is empty when no Shapes have previously been choosen.
-                // If this is the first Shape choosen, and if so, the Shape is saved in the AddingLineFrom variable.
-                //  Also the Shape is set as selected, to make it look different visually.
-                if (addingLineFrom == null) { addingLineFrom = shape; addingLineFrom.IsSelected = true; }
-                // If this is not the first Shape choosen, and therefore the second, 
-                //  it is checked that the first and second Shape are different.
-                else if (addingLineFrom.Number != shape.Number)
-                {
-                    // Now that it has been established that the Line adding operation has been completed succesfully by the user, 
-                    //  a Line is added using an 'AddLineCommand', with a new Line given between the two shapes chosen.
-                    undoRedoController.AddAndExecute(new AddLineCommand(Lines, new() { From = addingLineFrom, To = shape }));
-                    UndoCommand.NotifyCanExecuteChanged();
-                    // The property used for visually indicating that a Line is being Drawn is cleared, 
-                    //  so the View can return to its original and default apperance.
-                    addingLineFrom.IsSelected = false;
-                    // The 'isAddingLine' and 'addingLineFrom' variables are cleared, 
-                    //  so the MainViewModel is ready for another Line adding operation.
-                    isAddingLine = false;
-                    addingLineFrom = null;
-                    // The property used for visually indicating which Shape has already been choosen, is cleared, 
-                    //  so the View can return to its original and default apperance.
-                    OnPropertyChanged(nameof(ModeOpacity));
-                }
-            }
-            // Used for moving a Shape.
-            else
-            {
-                // The Shape is gotten from the mouse event.
-                var shape = TargetShape(e);
-                // The mouse position relative to the target of the mouse event.
-                var mousePosition = RelativeMousePosition(e);
-
-                // The Shape is moved back to its original position, so the offset given to the move command works.
-                shape.X = initialShapePosition.X;
-                shape.Y = initialShapePosition.Y;
-
-                // Now that the Move Shape operation is over, the Shape is moved to the final position, 
-                //  by using a MoveShapeCommand to move it.
-                // The MoveShapeCommand is given the offset that it should be moved relative to its original position, 
-                //  and with respect to the Undo/Redo functionality the Shape has only been moved once, with this Command.
-                undoRedoController.AddAndExecute(new MoveShapeCommand(shape, mousePosition.X - initialMousePosition.X, mousePosition.Y - initialMousePosition.Y));
+                undoRedoController.AddAndExecute(new AddLineCommand(Lines, new() { From = addingLineFrom, To = shape }));
                 UndoCommand.NotifyCanExecuteChanged();
-
-                // The mouse is released, as the move operation is done, so it can be used by other controls.
-                e.MouseDevice.Target.ReleaseMouseCapture();
+                addingLineFrom.IsSelected = false;
+                isAddingLine = false;
+                addingLineFrom = null;
+                OnPropertyChanged(nameof(ModeOpacity));
             }
         }
-
-        // Gets the shape that was clicked.
-        private Shape TargetShape(MouseEventArgs e)
+        else
         {
-            // Here the visual element that the mouse is captured by is retrieved.
-            var shapeVisualElement = (FrameworkElement)e.MouseDevice.Target;
-            // From the shapes visual element, the Shape object which is the DataContext is retrieved.
-            return (Shape)shapeVisualElement.DataContext;
-        }
+            var shape = TargetShape(e);
+            var mousePosition = RelativeMousePosition(e);
 
-        // Gets the mouse position relative to the canvas.
-        private Point RelativeMousePosition(MouseEventArgs e)
-        {
-            // Here the visual element that the mouse is captured by is retrieved.
-            var shapeVisualElement = (FrameworkElement)e.MouseDevice.Target;
-            // The canvas holding the shapes visual element, is found by searching up the tree of visual elements.
-            var canvas = FindParentOfType<Canvas>(shapeVisualElement);
-            // The mouse position relative to the canvas is gotten here.
-            return Mouse.GetPosition(canvas);
-        }
+            shape.Position = initialShapePosition;
 
-        // Recursive method for finding the parent of a visual element of a certain type, 
-        //  by searching up the visual tree of parent elements.
-        // The '() ? () : ()' syntax, returns the second part if the first part is true, otherwise it returns the third part.
-        // This uses 'dynamic' which is an dynamic type variable (https://msdn.microsoft.com/en-us/library/dd264736.aspx).
-        private static T FindParentOfType<T>(DependencyObject o)
-        {
-            dynamic parent = VisualTreeHelper.GetParent(o);
-            return parent.GetType().IsAssignableFrom(typeof(T)) ? parent : FindParentOfType<T>(parent);
+            undoRedoController.AddAndExecute(new MoveShapeCommand(shape, new(mousePosition.X - initialMousePosition.X, mousePosition.Y - initialMousePosition.Y)));
+            UndoCommand.NotifyCanExecuteChanged();
+
+            e.MouseDevice.Target.ReleaseMouseCapture();
         }
+    }
+
+    private static Shape TargetShape(MouseEventArgs e)
+    {
+        var shapeVisualElement = (FrameworkElement)e.MouseDevice.Target;
+        return (Shape)shapeVisualElement.DataContext;
+    }
+
+    private static Point RelativeMousePosition(MouseEventArgs e)
+    {
+        var shapeVisualElement = (FrameworkElement)e.MouseDevice.Target;
+        var canvas = FindParentOfType<Canvas>(shapeVisualElement);
+        return Mouse.GetPosition(canvas);
+    }
+
+    private static T FindParentOfType<T>(DependencyObject o)
+    {
+        dynamic parent = VisualTreeHelper.GetParent(o);
+        return parent.GetType().IsAssignableFrom(typeof(T)) ? parent : FindParentOfType<T>(parent);
     }
 }

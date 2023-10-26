@@ -1,15 +1,9 @@
-﻿using System.Windows.Controls;
+﻿namespace _02350Demo.View;
 
-namespace _02350Demo.View
+public partial class SidePanelUserControl : UserControl
 {
-    /// <summary>
-    /// Interaction logic for SidePanelUserControl.xaml
-    /// </summary>
-    public partial class SidePanelUserControl : UserControl
+    public SidePanelUserControl()
     {
-        public SidePanelUserControl()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

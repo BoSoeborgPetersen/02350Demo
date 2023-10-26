@@ -1,23 +1,38 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <RootNamespace>_02350Demo</RootNamespace>
-    <UseWPF>true</UseWPF>
-    <ApplicationIcon>Icon.ico</ApplicationIcon>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<RootNamespace>_02350Demo</RootNamespace>
+		<UseWPF>true</UseWPF>
+		<ApplicationIcon>Icon.ico</ApplicationIcon>
+		<ImplicitUsings>true</ImplicitUsings>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ApplicationDefinition Include="View\App.xaml" />
-  </ItemGroup>
+	<ItemGroup>
+		<Using Include="_02350Demo.Model"/>
+		<Using Include="_02350Demo.Command"/>
+		<Using Include="CommunityToolkit.Mvvm.ComponentModel"/>
+		<Using Include="CommunityToolkit.Mvvm.Input"/>
+		<Using Include="System.Collections"/>
+		<Using Include="System.Collections.ObjectModel"/>
+		<Using Include="System.Windows"/>
+		<Using Include="System.Windows.Controls"/>
+		<Using Include="System.Windows.Input"/>
+		<Using Include="System.Windows.Media"/>
+	</ItemGroup>
+	
+	<ItemGroup>
+		<ApplicationDefinition Include="View\App.xaml" />
+	</ItemGroup>
 
-  <ItemGroup>
-	<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
-	<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\02350Demo.Model\02350Demo.Model.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\02350Demo.Model\02350Demo.Model.csproj" />
+	</ItemGroup>
+	
 </Project>
