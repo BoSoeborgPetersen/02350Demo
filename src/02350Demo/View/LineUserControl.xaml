@@ -3,8 +3,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:m="clr-namespace:_02350Demo.Model;assembly=02350Demo.Model"
-             d:DataContext="{d:DesignInstance Type=m:Line}"
+             xmlns:vm="clr-namespace:_02350Demo.ViewModel"
+             d:DataContext="{d:DesignInstance Type=vm:LineViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="100">
     <Line Stroke="Red" X1="{Binding From.CanvasCenter.X}" Y1="{Binding From.CanvasCenter.Y}" X2="{Binding To.CanvasCenter.X}" Y2="{Binding To.CanvasCenter.Y}" StrokeThickness="10"/>

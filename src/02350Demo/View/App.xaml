@@ -1,20 +1,23 @@
 ﻿<Application x:Class="_02350Demo.View.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:m="clr-namespace:_02350Demo.Model;assembly=02350Demo.Model"
              xmlns:v="clr-namespace:_02350Demo.View"
+             xmlns:vm="clr-namespace:_02350Demo.ViewModel"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <DataTemplate DataType="{x:Type m:Shape}">
-            <Canvas>
-                <v:ShapeUserControl/>
-            </Canvas>
+        <DataTemplate DataType="{x:Type vm:ShapeViewModel}">
+            <v:ShapeUserControl/>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type m:Line}">
-            <Canvas>
-                <v:LineUserControl/>
-            </Canvas>
+        <DataTemplate DataType="{x:Type vm:LineViewModel}">
+            <v:LineUserControl/>
         </DataTemplate>
+        <ItemsPanelTemplate x:Key="CanvasPanel">
+            <Canvas/>
+        </ItemsPanelTemplate>
+        <Style TargetType="ContentPresenter" x:Key="CanvasPositionStyle">
+            <Setter Property="Canvas.Left" Value="{Binding Position.X}"/>
+            <Setter Property="Canvas.Top" Value="{Binding Position.Y}"/>
+        </Style>
         <Style TargetType="Button">
             <Setter Property="OverridesDefaultStyle" Value="False"/>
             <Setter Property="Margin" Value="4"/>

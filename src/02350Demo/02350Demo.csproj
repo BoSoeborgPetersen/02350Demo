@@ -2,24 +2,28 @@
 
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net6.0-windows</TargetFramework>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
 		<RootNamespace>_02350Demo</RootNamespace>
 		<UseWPF>true</UseWPF>
 		<ApplicationIcon>Icon.ico</ApplicationIcon>
-		<ImplicitUsings>true</ImplicitUsings>
 	</PropertyGroup>
-
+	
 	<ItemGroup>
-		<Using Include="_02350Demo.Model"/>
-		<Using Include="_02350Demo.Command"/>
-		<Using Include="CommunityToolkit.Mvvm.ComponentModel"/>
-		<Using Include="CommunityToolkit.Mvvm.Input"/>
-		<Using Include="System.Collections"/>
-		<Using Include="System.Collections.ObjectModel"/>
-		<Using Include="System.Windows"/>
-		<Using Include="System.Windows.Controls"/>
-		<Using Include="System.Windows.Input"/>
-		<Using Include="System.Windows.Media"/>
+		<Using Include="_02350Demo.Message" />
+		<Using Include="_02350Demo.Service" />
+		<Using Include="_02350Demo.UndoRedo" />
+		<Using Include="_02350Demo.ViewModel" />
+		<Using Include="CommunityToolkit.Mvvm.ComponentModel" />
+		<Using Include="CommunityToolkit.Mvvm.Input" />
+		<Using Include="CommunityToolkit.Mvvm.Messaging" />
+		<Using Include="CommunityToolkit.Mvvm.Messaging.Messages" />
+		<Using Include="System.Collections" />
+		<Using Include="System.Collections.ObjectModel" />
+		<Using Include="System.Windows" />
+		<Using Include="System.Windows.Controls" />
+		<Using Include="System.Windows.Input" />
+		<Using Include="System.Windows.Media" />
 	</ItemGroup>
 	
 	<ItemGroup>
@@ -27,12 +31,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\02350Demo.Model\02350Demo.Model.csproj" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.122" />
 	</ItemGroup>
 	
 </Project>
