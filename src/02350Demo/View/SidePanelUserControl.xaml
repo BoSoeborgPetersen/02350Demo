@@ -2,12 +2,14 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:_02350Demo.ViewModel"
              d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="240">
+    <UserControl.Resources>
+        <CollectionViewSource x:Key="Shapes" Source="{Binding Shapes}" />
+    </UserControl.Resources>
     <StackPanel Width="240">
         <StackPanel.Background>
             <LinearGradientBrush StartPoint="0,1">
@@ -21,72 +23,34 @@
             </LinearGradientBrush>
         </StackPanel.Background>
         <GroupBox Header="Undo / Redo" Foreground="White" Margin="6">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
+            <UniformGrid Rows="1">
                 <Button Content="Undo" Command="{Binding UndoCommand}" Margin="6,4"/>
-                <Button Grid.Column="1" Content="Redo" Command="{Binding RedoCommand}" Margin="6,4"/>
-            </Grid>
+                <Button Content="Redo" Command="{Binding RedoCommand}" Margin="6,4"/>
+            </UniformGrid>
         </GroupBox>
         <GroupBox Header="Shapes" Foreground="White" Margin="6">
             <StackPanel>
                 <Button Content="Add shape" Command="{Binding AddShapeCommand}"/>
-                <DataGrid x:Name="shapesControl" Height="140" ItemsSource="{Binding Shapes}" HeadersVisibility="Column" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False">
+                <DataGrid Height="140" ItemsSource="{Binding Shapes}" SelectedValue="{Binding SelectedShape}" HeadersVisibility="Column" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Number}" Header="Number" Width="*" IsReadOnly="True"/>
-                        <DataGridTextColumn Binding="{Binding Position.X}" Header="X" Width="*"/>
-                        <DataGridTextColumn Binding="{Binding Position.Y}" Header="Y" Width="*"/>
-                        <DataGridTextColumn Binding="{Binding Size.Width}" Header="Width" Width="*"/>
-                        <DataGridTextColumn Binding="{Binding Size.Height}" Header="Height" Width="*"/>
+                        <DataGridTextColumn Header="Number" Width="*" Binding="{Binding Number}" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Position" Width="*" Binding="{Binding Position}"/>
+                        <DataGridTextColumn Header="Size" Width="*" Binding="{Binding Size}"/>
                     </DataGrid.Columns>
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="SelectionChanged">
-                            <i:InvokeCommandAction Command="{Binding DataContext.ShapesSelectionChangedCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
                 </DataGrid>
-                <Button Content="Remove chosen shape" Command="{Binding RemoveShapeCommand}" CommandParameter="{Binding SelectedItems, ElementName=shapesControl}"/>
+                <Button Content="Remove chosen shapes" Command="{Binding RemoveShapeCommand}"/>
             </StackPanel>
         </GroupBox>
         <GroupBox Header="Lines" Foreground="White" Margin="6">
             <StackPanel>
                 <Button Content="Add line" Command="{Binding AddLineCommand}"/>
-                <DataGrid x:Name="linesControl" Height="140" ItemsSource="{Binding Lines}" HeadersVisibility="Column" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False">
+                <DataGrid Height="140" ItemsSource="{Binding Lines}" SelectedValue="{Binding SelectedLine}" HeadersVisibility="Column" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False">
                     <DataGrid.Columns>
-                        <DataGridComboBoxColumn Header="From" DisplayMemberPath="." Width="*" SelectedItemBinding="{Binding From, UpdateSourceTrigger=PropertyChanged}">
-                            <DataGridComboBoxColumn.ElementStyle>
-                                <Style TargetType="{x:Type ComboBox}">
-                                    <Setter Property="ItemsSource" Value="{Binding DataContext.Shapes, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
-                                </Style>
-                            </DataGridComboBoxColumn.ElementStyle>
-                            <DataGridComboBoxColumn.EditingElementStyle>
-                                <Style TargetType="{x:Type ComboBox}">
-                                    <Setter Property="ItemsSource" Value="{Binding DataContext.Shapes, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
-                                </Style>
-                            </DataGridComboBoxColumn.EditingElementStyle>
-                        </DataGridComboBoxColumn>
-                        <DataGridComboBoxColumn Header="To" DisplayMemberPath="." Width="*" SelectedItemBinding="{Binding To, UpdateSourceTrigger=PropertyChanged}">
-                            <DataGridComboBoxColumn.ElementStyle>
-                                <Style TargetType="{x:Type ComboBox}">
-                                    <Setter Property="ItemsSource" Value="{Binding DataContext.Shapes, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
-                                </Style>
-                            </DataGridComboBoxColumn.ElementStyle>
-                            <DataGridComboBoxColumn.EditingElementStyle>
-                                <Style TargetType="{x:Type ComboBox}">
-                                    <Setter Property="ItemsSource" Value="{Binding DataContext.Shapes, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
-                                </Style>
-                            </DataGridComboBoxColumn.EditingElementStyle>
-                        </DataGridComboBoxColumn>
+                        <DataGridComboBoxColumn Header="From" DisplayMemberPath="Number" Width="*" ItemsSource="{Binding Source={StaticResource Shapes}}" SelectedItemBinding="{Binding From, UpdateSourceTrigger=PropertyChanged}" />
+                        <DataGridComboBoxColumn Header="To" DisplayMemberPath="Number" Width="*" ItemsSource="{Binding Source={StaticResource Shapes}}" SelectedItemBinding="{Binding To, UpdateSourceTrigger=PropertyChanged}" />
                     </DataGrid.Columns>
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="SelectionChanged">
-                            <i:InvokeCommandAction Command="{Binding DataContext.LinesSelectionChangedCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
                 </DataGrid>
-                <Button Content="Remove chosen lines" Command="{Binding RemoveLinesCommand}" CommandParameter="{Binding SelectedItems, ElementName=linesControl}"/>
+                <Button Content="Remove chosen lines" Command="{Binding RemoveLineCommand}"/>
             </StackPanel>
         </GroupBox>
     </StackPanel>
